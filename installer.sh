@@ -12,7 +12,7 @@ export WINEPREFIX="$PWD/$prefix_name"
 if [[ -d "$prefix_name" ]]; then
   choice="0"
   read -p "A prefix by that name seems to be present, would you like to override that installation? (y/N): " choice
-  if [[ $choice != "y" ]]; then
+  if ! [[ $choice == "y" ]]; then
     echo ""
     echo "Aborting installation!"
     echo ""
