@@ -5,14 +5,14 @@ echo "Starting Adobe Photoshop CC 2021 (v22) installer..."
 echo ""
 sleep 1
 
-read -p "Give a name to the WINE Prefix that will be used. A folder with this name will be created in the current directory." prefix_name
+read -p "Give a name to the WINE Prefix that will be used. A folder with this name will be created in the current directory. " prefix_name
 export WINEPREFIX="$PWD/$prefix_name"
 
 
-if [ -d "$prefix_name" ]; then
+if [[ -d "$prefix_name" ]]; then
   choice="0"
-  read -p "A prefix by that name seems to be present, would you like to override that installation? (y/n): " choice
-  if ! [ $choice = "y" ]; then
+  read -p "A prefix by that name seems to be present, would you like to override that installation? (y/N): " choice
+  if [[ $choice != "y" ]]; then
     echo ""
     echo "Aborting installation!"
     echo ""
@@ -80,7 +80,7 @@ sleep 1
 sleep 1
 
 echo "Installing & configuring winetricks components..."
-./scripts/winetricks fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2019 vcrun2012 vcrun2013 vcrun2010 vdk3d
+./scripts/winetricks fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2019 vcrun2012 vcrun2013 vcrun2010 vkd3d
 sleep 1
 
 echo "Installing redist components..."
