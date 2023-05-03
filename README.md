@@ -1,22 +1,24 @@
 # Adobe Photoshop CC 2022 installer for Linux
 
-![image](https://github.com/YoungFellow-le/photoshop-22-linux/blob/main/images/screenshot.png)
+![image](https://github.com/tigeritest/photoshop-22-linux/blob/main/images/screenshot.png)
 
-## Disclaimer
-This script sets up a WINE prefix for you to use when installing Photoshop. It doesn't download Adobe Photoshop or plugins for you; once a prefix is prepared, you can use it to install Adobe Photoshop by yourself.
+# Description
+This script sets up a WINE prefix that can be used to install and run some modern versions of Adobe Photoshop.  
+It has been tested with CC 2021 (v22) and CC 2022 (v23).  
+Some issues still persist - this script is heavily **work in progress**!  
+The installer doesn't download Adobe Photoshop or plugins for you. Once a prefix is prepared, you can use it to install Photoshop by yourself.
 
-## Requirements
+# Requirements
 - An internet connection
 - All **read** and **write** rights on your home folder and the folder of installation
 - `git`
-- `wine` >=6.1 (Avoid 6.20 to 6.22)
+- `wine` >=8.0
 - `tar`
 - `wget`
 - `curl`
 - Vulkan capable GPU or APU
 
-
-## Installation guide:
+# Using the script
 
 Open your terminal and:
 
@@ -31,11 +33,30 @@ cd photoshop-22-linux
 ./installer.sh
 
 ```
-## How to run Photoshop:
+# Set up steps after using the script
+Make note of the path to the prefix directory that you created with the script. WINEPREFIX= requires an **absolute path**, for example, `/home/user/photoshop/` instead of `~/photoshop`.
+## For Photoshop 2022 (v23)
+Use the original installer (.exe). Replace "/path/to/prefix" with created directory and "filename.exe" with the installer's name.
+```bash
+WINEPREFIX=/path/to/prefix wine 'filename.exe'
+```
+## For Photoshop 2021 (v22)
+Photoshop 2021's installer has been reported to not work and there's currently no solution for it. A known workaround is to install the app in a Windows dual-boot partition or a virtual machine, then copy files over to your Linux partition.  
+From your Windows system, copy the Photoshop folder from this directory:
+```
+C:/Program Files/Adobe
+```
+Then, on Linux, move it to:
+```
+prefix/drive_c/Program Files/Adobe
+```
+Replace `prefix` with the path to your prefix directory created by the installer script.
+# After Photoshop has been installed
+## Starting Photoshop
 
 After you run the installer, open your application menu, and search for "Photoshop", and click on it. As simple as that!
 
-![image](https://github.com/YoungFellow-le/photoshop-22-linux/blob/main/images/menu.png)
+![image](https://github.com/tigeritest/photoshop-22-linux/blob/main/images/menu.png)
 
 
 ## Configure Photoshop:
