@@ -4,7 +4,7 @@
 
 # Description
 This script sets up a WINE prefix that can be used to install and run some modern versions of Adobe Photoshop.  
-It has been tested with CC 2021 (v22) and CC 2022 (v23).  
+It has been tested with CC 2022 (v23).  
 Some issues still persist - this script is heavily **work in progress**!  
 The installer doesn't download Adobe Photoshop or plugins for you. Once a prefix is prepared, you can use it to install Photoshop by yourself.
 
@@ -40,17 +40,6 @@ Use the original installer (.exe). Replace "/path/to/prefix" with created direct
 ```bash
 WINEPREFIX=/path/to/prefix wine 'filename.exe'
 ```
-## For Photoshop 2021 (v22)
-Photoshop 2021's installer has been reported to not work and there's currently no solution for it. A known workaround is to install the app in a Windows dual-boot partition or a virtual machine, then copy files over to your Linux partition.  
-From your Windows system, copy the Photoshop folder from this directory:
-```
-C:/Program Files/Adobe
-```
-Then, on Linux, move it to:
-```
-prefix/drive_c/Program Files/Adobe
-```
-Replace `prefix` with the path to your prefix directory created by the installer script.
 # After Photoshop has been installed
 ## Starting Photoshop
 
