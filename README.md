@@ -1,4 +1,4 @@
-# Adobe Photoshop CC 2022 installer for Linux
+# Winetricks configuration for Adobe Photoshop CC on Linux
 
 ![image](https://github.com/tigeritest/photoshop-22-linux/blob/main/images/screenshot.png)
 
@@ -25,7 +25,7 @@ Open your terminal and:
 ```bash
 # Clone the repo
 
-git clone https://github.com/tigeritest/photoshop-22-linux.git
+git clone https://github.com/tigeritest/photoshop-on-linux.git
 cd photoshop-22-linux
 
 # Run the installation script:
