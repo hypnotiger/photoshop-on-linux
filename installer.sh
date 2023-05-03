@@ -5,7 +5,7 @@ echo "Starting Adobe Photoshop CC 2021 (v22) installer..."
 echo ""
 sleep 1
 
-read -p "Give a name to the WINE Prefix that will be used. A folder with this name will be created in the current directory. " prefix_name
+read -p "Give a name to the WINE Prefix that will be used. A folder with this name will be created in the current directory." prefix_name
 export WINEPREFIX="$PWD/$prefix_name"
 
 
@@ -80,21 +80,10 @@ sleep 1
 sleep 1
 
 echo "Installing & configuring winetricks components..."
-./scripts/winetricks fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2019 vcrun2012 vcrun2013 vcrun2010 vkd3d
+./scripts/winetricks fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2019 vcrun2012 vcrun2013 vcrun2010 vdk3d
 sleep 1
 
 echo "Installing redist components..."
-sleep 1
-
-wine installation_files/redist/2010/vcredist_x64.exe /q /norestart
-wine installation_files/redist/2010/vcredist_x86.exe /q /norestart
-wine installation_files/redist/2012/vcredist_x86.exe /install /quiet /norestart
-wine installation_files/redist/2012/vcredist_x64.exe /install /quiet /norestart
-wine installation_files/redist/2013/vcredist_x86.exe /install /quiet /norestart
-wine installation_files/redist/2013/vcredist_x64.exe /install /quiet /norestart
-wine installation_files/redist/2019/VC_redist.x64.exe /install /quiet /norestart
-wine installation_files/redist/2019/VC_redist.x86.exe /install /quiet /norestart
-
 sleep 1
 
 echo "Copying launcher files and desktop icons..."
