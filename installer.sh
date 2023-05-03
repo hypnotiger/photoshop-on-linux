@@ -5,14 +5,28 @@ echo "Starting Adobe Photoshop CC 2021 (v22) installer..."
 echo ""
 sleep 1
 
-read -p "Give a name to the WINE Prefix that will be used. A folder with this name will be created in the current directory. " prefix_name
+$prefix_name == ""
+while [[ $prefix_name == "" ]]; do
+  read -p "Give a name to the WINE Prefix that will be used. A folder with this name will be created in the current directory. " prefix_name
+done
 
 if [[ -d "$prefix_name" ]]; then
   choice="0"
   read -p "A prefix by that name seems to be present, would you like to override that installation? (y/N): " choice
   if [[ "$choice" == "y" ]]; then
 
-  export WINEPREFIX="$PWD/$prefix_name"
+  rm -rf ./$prefix_name
+
+  else
+    echo ""
+    echo "Aborting installation!"
+    echo ""
+    exit 1
+  fi
+  sleep 1
+fi
+
+export WINEPREFIX="$PWD/$prefix_name"
 
   echo "Checking for dependencies..."
   sleep 0.5
@@ -108,11 +122,3 @@ if [[ -d "$prefix_name" ]]; then
   sleep 1
 
   echo "Adobe Photoshop CC 2021 (v22) Installation has been completed!"
-  else
-    echo ""
-    echo "Aborting installation!"
-    echo ""
-    exit 1
-  fi
-  sleep 1
-fi
