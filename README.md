@@ -33,6 +33,7 @@ cd photoshop-22-linux
 ./installer.sh
 
 ```
+During the installation, several popups will appear to agree to several Microsoft packages' terms of use.
 # Set up steps after using the script
 Make note of the path to the prefix directory that you created with the script. WINEPREFIX= requires an **absolute path**, for example, `/home/user/photoshop/` instead of `~/photoshop`.
 ## For Photoshop 2022 (v23)
