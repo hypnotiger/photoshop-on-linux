@@ -5,9 +5,10 @@ echo "Starting Adobe Photoshop CC 2021 (v22) installer..."
 echo ""
 sleep 1
 
-$prefix_name = ""
+prefix_name=""
 while [[ $prefix_name == "" ]]; do
   read -p "Give a name to the WINE Prefix that will be used. A folder with this name will be created in the current directory. " prefix_name
+  echo ""
 done
 
 if [[ -d "$prefix_name" ]]; then
