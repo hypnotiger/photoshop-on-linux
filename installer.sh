@@ -90,11 +90,6 @@ export WINEPREFIX="$PWD/$prefix_name"
   ./scripts/winetricks fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2019 vcrun2012 vcrun2013 vcrun2010 vcrun2015 vkd3d
   sleep 1
 
-  echo "Installing redist components..."
-  sleep 1
-
-  echo "Copying launcher files and desktop icons..."
-
   sleep 1
   rm -f scripts/launcher.sh
   rm -f scripts/photoshop.desktop
@@ -122,4 +117,4 @@ export WINEPREFIX="$PWD/$prefix_name"
 
   sleep 1
 
-  echo "Adobe Photoshop CC 2021 (v22) Installation has been completed!"
+  echo "The WINEPREFIX for Adobe Photoshop CC 2022 (v23) has been set up!"
