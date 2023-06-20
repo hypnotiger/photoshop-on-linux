@@ -90,6 +90,14 @@ export WINEPREFIX="$PWD/$prefix_name"
   ./scripts/winetricks fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2019 vcrun2012 vcrun2013 vcrun2010 vkd3d
   sleep 1
 
+  echo "Looking for dxvk..."
+  if [ -d "/usr/share/dxvk" ]; then
+    echo "Setting up dxvk..."
+    WINEPREFIX=\"$PWD/$prefix_name\" setup_dxvk install
+  else
+    echo "dxvk not found - skipping"
+  fi
+
   sleep 1
   rm -f scripts/launcher.sh
   rm -f scripts/photoshop.desktop
