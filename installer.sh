@@ -87,7 +87,7 @@ export WINEPREFIX="$PWD/$prefix_name"
   sleep 1
 
   echo "Installing & configuring winetricks components..."
-  ./scripts/winetricks fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2019 vcrun2012 vcrun2013 vcrun2010 vkd3d
+  ./scripts/winetricks fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2019 vcrun2012 vcrun2013 vcrun2010 vcrun2015 vkd3d
   sleep 1
 
   echo "Installing redist components..."
