@@ -79,16 +79,13 @@ export WINEPREFIX="$PWD/$prefix_name"
   echo "Booting & creating new prefix"
   sleep 1
   wineboot
-  sleep 1
 
   echo "Setting win version to win10"
   sleep 1
   ./scripts/winetricks win10
-  sleep 1
 
   echo "Installing & configuring winetricks components..."
-  ./scripts/winetricks fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2019 vcrun2012 vcrun2013 vcrun2010 vkd3d
-  sleep 1
+  ./scripts/winetricks fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2019 vcrun2012 vcrun2013 vcrun2010 vcrun2022 vkd3d
 
   echo "Looking for dxvk..."
   if [ -d "/usr/share/dxvk" ]; then
