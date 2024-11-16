@@ -84,18 +84,11 @@ export WINEPREFIX="$PWD/$prefix_name"
   wget -nc --directory-prefix=scripts/ https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
   chmod +x scripts/winetricks
 
-  sleep 1
-
   echo "Booting & creating new prefix"
-  sleep 1
   wineboot
 
-  echo "Setting win version to win10"
-  sleep 1
-  ./scripts/winetricks win10
-
   echo "Installing & configuring winetricks components..."
-  ./scripts/winetricks fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2019 vcrun2012 vcrun2013 vcrun2010 vcrun2022 vkd3d
+  ./scripts/winetricks fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2012 vcrun2013 vcrun2010 vcrun2022 vkd3d
 
   echo "Looking for dxvk..."
   if [ -d "/usr/share/dxvk" ]; then
@@ -104,6 +97,9 @@ export WINEPREFIX="$PWD/$prefix_name"
   else
     echo "dxvk not found - skipping"
   fi
+
+  echo "Setting win version to win10"
+  ./scripts/winetricks win10
 
   sleep 1
   rm -f scripts/launcher.sh
