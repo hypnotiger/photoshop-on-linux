@@ -1,14 +1,30 @@
 #!/bin/bash
 
-echo ""
-echo "Starting Adobe Photoshop CC 2021 (v22) installer..."
-echo ""
-sleep 1
+echo "Welcome to setup script for Adobe Photoshop CC!"
 
 prefix_name=""
 while [[ $prefix_name == "" ]]; do
-  read -p "Give a name to the WINE Prefix that will be used. A folder with this name will be created in the current directory. " prefix_name
+  read -p "
+Give a name to the Wine prefix that will be used.
+A folder with this name will be created in the current directory.
+> " prefix_name
   echo ""
+done
+
+ps_version=""
+echo "Please specify the year of Adobe Photoshop version you'd like to set up now.
+(For example, 2024)
+This script is intended to be used with PS 2021-2024, but other versions might
+work with it too. If you have any suggestions or corrections for your version,
+please open an issue on the GitHub repository."
+while [[ $ps_version == "" ]]; do
+  read -p "> " ps_version
+
+  # Checking for value like 20XX (2022, 2023, etc...)
+  if ! [[ $ps_version =~ ^'20'.. ]]; then
+    ps_version=""
+    echo "Please enter a year, for example: 2022"
+  fi
 done
 
 if [[ -d "$prefix_name" ]]; then
@@ -24,40 +40,34 @@ if [[ -d "$prefix_name" ]]; then
     echo ""
     exit 1
   fi
-  sleep 1
 fi
 
 export WINEPREFIX="$PWD/$prefix_name"
 
   echo "Checking for dependencies..."
-  sleep 0.5
 
   if ! command -v curl &> /dev/null; then
     echo -e "- '${red}curl${reset}' is MISSING!"
     MISSING=1
-    sleep 0.5
   fi
 
   if ! command -v wine &> /dev/null; then
     echo -e "- '${red}wine${reset}' is MISSING!"
     MISSING=1
-    sleep 0.5
   fi
 
   if ! command -v tar &> /dev/null; then
     echo -e "- '${red}tar${reset}' is MISSING!"
     MISSING=1
-    sleep 0.5
   fi
 
   if ! command -v wget &> /dev/null; then
     echo -e "- '${red}wget${reset}' is MISSING!"
     MISSING=1
-    sleep 0.5
   fi
 
   if [[ $MISSING == "1" ]]; then
-    echo -e "\n${red}- ERROR:${reset} Please install the missing dependencies and then reattempt the installation"
+    echo -e "\n${red}- ERROR:${reset} Please install the missing dependencies and then reattempt the installation!"
     exit 1
   fi
 
@@ -100,7 +110,7 @@ export WINEPREFIX="$PWD/$prefix_name"
   rm -f scripts/photoshop.desktop
 
   echo "#\!/bin/bash
-  cd \"$PWD/$prefix_name/drive_c/Program Files/Adobe/Adobe Photoshop 2021/\"
+  cd \"$PWD/$prefix_name/drive_c/Program Files/Adobe/Adobe Photoshop $ps_version/\"
   WINEPREFIX=\"$PWD/$prefix_name\" wine photoshop.exe $1" > scripts/launcher.sh
 
 
@@ -108,7 +118,7 @@ export WINEPREFIX="$PWD/$prefix_name"
   Name=Photoshop CC
   Exec=bash -c '$PWD/scripts/launcher.sh'
   Type=Application
-  Comment=Photoshop CC 2021
+  Comment=Photoshop CC $ps_version
   Categories=Graphics;2DGraphics;RasterGraphics;Production;
   Icon=$PWD/images/photoshop.svg
   StartupWMClass=photoshop.exe
@@ -122,4 +132,4 @@ export WINEPREFIX="$PWD/$prefix_name"
 
   sleep 1
 
-  echo "The WINEPREFIX for Adobe Photoshop CC 2022 (v23) has been set up!"
+  echo "The WINEPREFIX for Adobe Photoshop CC $ps_version has been set up!"
