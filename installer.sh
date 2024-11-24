@@ -1,6 +1,40 @@
 #!/bin/bash
 
-echo "Welcome to setup script for Adobe Photoshop CC!"
+# Checking for dependencies
+if ! command -v curl &> /dev/null; then
+  echo -e "Error - curl is MISSING!"
+  MISSING=1
+fi
+
+if ! command -v wine &> /dev/null; then
+  echo -e "Error - wine is MISSING!"
+  MISSING=1
+fi
+
+if ! command -v tar &> /dev/null; then
+  echo -e "Error - tar is MISSING!"
+  MISSING=1
+fi
+
+if ! command -v wget &> /dev/null; then
+  echo -e "Error - wget is MISSING!"
+  MISSING=1
+fi
+
+if [[ $MISSING == "1" ]]; then
+  echo -e "Please install the missing dependencies through your package manager,
+then run this script again."
+  exit 1
+fi
+# ------------
+
+read -p "Welcome to the interactive WINEPREFIX setup for Adobe Photoshop CC!
+This script will prepare a WINEPREFIX for you to use with your desired
+version of Adobe Photoshop CC.
+If you encounter any issues, please let us know by creating an Issue
+in the GitHub repository.
+------------------
+Press Enter to start."
 
 prefix_name=""
 while [[ $prefix_name == "" ]]; do
@@ -11,12 +45,30 @@ A folder with this name will be created in the current directory.
   echo ""
 done
 
+if [[ -d "$prefix_name" ]]; then
+  choice="0"
+  read -p "A directory by that name is already present:
+  $PWD/$prefix_name
+Would you like to override it? (y/N): " choice
+  if [[ "$choice" == "y" ]]; then
+
+  rm -rf ./$prefix_name
+  echo ""
+  else
+    echo ""
+    echo "Aborting installation!"
+    echo ""
+    exit 1
+  fi
+fi
+
+
 ps_version=""
-echo "Please specify the year of Adobe Photoshop version you'd like to set up now.
-(For example, 2024)
-This script is intended to be used with PS 2021-2024, but other versions might
-work with it too. If you have any suggestions or corrections for your version,
-please open an issue on the GitHub repository."
+echo "Please specify the year of Adobe Photoshop version that you intend
+to use with this prefix, i.e. 2021, 2022, or another.
+This script aims to support PS CC 2021-2024, but other versions might
+work with it too. If you have any suggestions, please open an issue on
+the GitHub repository."
 while [[ $ps_version == "" ]]; do
   read -p "> " ps_version
 
@@ -27,49 +79,8 @@ while [[ $ps_version == "" ]]; do
   fi
 done
 
-if [[ -d "$prefix_name" ]]; then
-  choice="0"
-  read -p "A prefix by that name seems to be present, would you like to override that installation? (y/N): " choice
-  if [[ "$choice" == "y" ]]; then
-
-  rm -rf ./$prefix_name
-
-  else
-    echo ""
-    echo "Aborting installation!"
-    echo ""
-    exit 1
-  fi
-fi
 
 export WINEPREFIX="$PWD/$prefix_name"
-
-  echo "Checking for dependencies..."
-
-  if ! command -v curl &> /dev/null; then
-    echo -e "- '${red}curl${reset}' is MISSING!"
-    MISSING=1
-  fi
-
-  if ! command -v wine &> /dev/null; then
-    echo -e "- '${red}wine${reset}' is MISSING!"
-    MISSING=1
-  fi
-
-  if ! command -v tar &> /dev/null; then
-    echo -e "- '${red}tar${reset}' is MISSING!"
-    MISSING=1
-  fi
-
-  if ! command -v wget &> /dev/null; then
-    echo -e "- '${red}wget${reset}' is MISSING!"
-    MISSING=1
-  fi
-
-  if [[ $MISSING == "1" ]]; then
-    echo -e "\n${red}- ERROR:${reset} Please install the missing dependencies and then reattempt the installation!"
-    exit 1
-  fi
 
   echo "Making a new prefix for Adobe Photoshop..."
   sleep 1
@@ -79,36 +90,38 @@ export WINEPREFIX="$PWD/$prefix_name"
 
   mkdir -p scripts
 
-  echo "Downloading winetricks..."
-  sleep 1
-  wget -nc --directory-prefix=scripts/ https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
-  chmod +x scripts/winetricks
+  if ! command -v winetricks &> /dev/null; then
+    echo "Downloading winetricks..."
+    wget -nc --directory-prefix=scripts/ https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
+    chmod +x scripts/winetricks
+  fi
 
   echo "Booting & creating new prefix"
   wineboot
 
-  echo "Installing & configuring winetricks components..."
-  ./scripts/winetricks fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2012 vcrun2013 vcrun2010 vcrun2022 vkd3d
+  read -p "
+Winetricks components will now be downloaded and installed.
+Some installers will require you to click through them manually.
+Checking Terms of Services checkboxes is necessary to continue.
+Checking \"Send Microsoft usage data\" and other similar ones is not required.
+Press Enter to begin installation."
+  ./scripts/winetricks --force fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts vcrun2022 vkd3d
 
-  echo "Looking for dxvk..."
-  if [ -d "/usr/share/dxvk" ]; then
-    echo "Setting up dxvk..."
-    WINEPREFIX=\"$PWD/$prefix_name\" setup_dxvk install
-  else
-    echo "dxvk not found - skipping"
-  fi
+  echo "Installing dxvk into the prefix. This is required for Photoshop to
+recognize your GPU. For best results, ensure that all the required drivers
+and mesa packages for your GPU are installed and up-to-date."
+  WINEPREFIX=\"$PWD/$prefix_name\" ./scripts/winetricks dxvk
+  WINEPREFIX=\"$PWD/$prefix_name\" setup_dxvk install
 
-  echo "Setting win version to win10"
+  echo "Setting Windows version to win10"
   ./scripts/winetricks win10
 
-  sleep 1
   rm -f scripts/launcher.sh
   rm -f scripts/photoshop.desktop
 
   echo "#\!/bin/bash
   cd \"$PWD/$prefix_name/drive_c/Program Files/Adobe/Adobe Photoshop $ps_version/\"
   WINEPREFIX=\"$PWD/$prefix_name\" wine photoshop.exe $1" > scripts/launcher.sh
-
 
   echo "[Desktop Entry]
   Name=Photoshop CC
@@ -126,6 +139,13 @@ export WINEPREFIX="$PWD/$prefix_name"
   rm -f ~/.local/share/applications/photoshop.desktop
   mv scripts/photoshop.desktop ~/.local/share/applications/photoshop.desktop
 
-  sleep 1
+  echo "The WINEPREFIX for Adobe Photoshop CC $ps_version has been set up!
+It's now time to install Photoshop by running the installer that you've
+sourced and using this WINEPREFIX. For example, if you are in the same
+directory as the installer:
 
-  echo "The WINEPREFIX for Adobe Photoshop CC $ps_version has been set up!"
+WINEPREFIX=$PWD/$prefix_name Photoshop_Set-Up.exe
+
+If you already have Photoshop installed somewhere else on your system, it
+might still be required to reinstall it manually into this prefix, as shown
+above."
