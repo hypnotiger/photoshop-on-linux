@@ -28,6 +28,9 @@ then run this script again."
 fi
 # ------------
 
+rm -f "$PWD/log_installer"
+touch "$PWD/log_installer"
+
 read -p "Welcome to the interactive WINEPREFIX setup for Adobe Photoshop CC!
 This script will prepare a WINEPREFIX for you to use with your desired
 version of Adobe Photoshop CC.
@@ -52,7 +55,7 @@ if [[ -d "$prefix_name" ]]; then
 Would you like to override it? (y/N): " choice
   if [[ "$choice" == "y" ]]; then
 
-  rm -rf ./$prefix_name
+  rm -rf "./$prefix_name"
   echo ""
   else
     echo ""
@@ -83,10 +86,8 @@ done
 export WINEPREFIX="$PWD/$prefix_name"
 
   echo "Making a new prefix for Adobe Photoshop..."
-  sleep 1
-  rm -rf $PWD/$prefix_name
-  mkdir $PWD/$prefix_name
-  sleep 1
+  rm -rf "$PWD/$prefix_name"
+  mkdir "$PWD/$prefix_name"
 
   mkdir -p scripts
 
@@ -96,8 +97,7 @@ export WINEPREFIX="$PWD/$prefix_name"
     chmod +x scripts/winetricks
   fi
 
-  echo "Booting & creating new prefix"
-  wineboot
+  wineboot &>>./log_installer
 
   read -p "
 Winetricks components will now be downloaded and installed.
@@ -105,16 +105,18 @@ Some installers will require you to click through them manually.
 Checking Terms of Services checkboxes is necessary to continue.
 Checking \"Send Microsoft usage data\" and other similar ones is not required.
 Press Enter to begin installation."
-  ./scripts/winetricks --force fontsmooth=rgb gdiplus msxml3 msxml6 atmlib corefonts vcrun2022 vkd3d
+  ./scripts/winetricks --force gdiplus msxml3 msxml6 atmlib corefonts dxvk vcrun2019 vcrun2012 vcrun2013 vcrun2010 vcrun2022 vkd3d 2>>./log_installer
+  echo "Finished setting up winetricks"
 
   echo "Installing dxvk into the prefix. This is required for Photoshop to
 recognize your GPU. For best results, ensure that all the required drivers
 and mesa packages for your GPU are installed and up-to-date."
-  WINEPREFIX=\"$PWD/$prefix_name\" ./scripts/winetricks dxvk
-  WINEPREFIX=\"$PWD/$prefix_name\" setup_dxvk install
+  WINEPREFIX=\"$PWD/$prefix_name\" ./scripts/winetricks dxvk &>>./log_installer
+  WINEPREFIX=\"$PWD/$prefix_name\" setup_dxvk install &>>./log_installer
+  echo "Finished setting up dxvk"
 
-  echo "Setting Windows version to win10"
-  ./scripts/winetricks win10
+  ./scripts/winetricks win10 &>>./log_installer
+  echo "Set Windows version to 10"
 
   rm -f scripts/launcher.sh
   rm -f scripts/photoshop.desktop
@@ -138,14 +140,15 @@ and mesa packages for your GPU are installed and up-to-date."
 
   rm -f ~/.local/share/applications/photoshop.desktop
   mv scripts/photoshop.desktop ~/.local/share/applications/photoshop.desktop
+  echo "Created a launch script and shortcut for Adobe Photoshop"
+
+  echo ""
 
   echo "The WINEPREFIX for Adobe Photoshop CC $ps_version has been set up!
 It's now time to install Photoshop by running the installer that you've
-sourced and using this WINEPREFIX. For example, if you are in the same
-directory as the installer:
+acquired somewhere else and specifying this WINEPREFIX. For example:
 
 WINEPREFIX=$PWD/$prefix_name Photoshop_Set-Up.exe
 
-If you already have Photoshop installed somewhere else on your system, it
-might still be required to reinstall it manually into this prefix, as shown
-above."
+If you already have Photoshop somewhere else on your system, it might
+still be required to reinstall it manually into this prefix."
